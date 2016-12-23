@@ -6,7 +6,7 @@ https://github.com/LiskHQ/lisk-js
 https://jquery.com
 
 # Installtion
-Download the offline.zip for your offline machine and online.zip for online machine
+Download the offline.zip for your offline machine and online.zip for online machine - https://github.com/biolypl/Lisk-offline-transaction-signing-tool/releases/tag/v1.0
 
 Instead online.html you can also use my page http://tools.mylisk.com/online.html
 # OR
