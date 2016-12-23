@@ -1,0 +1,112 @@
+<html>
+  <head>
+    <title>Online version of Lisk transaction generator</title>
+    <meta content="UTF-8">
+    <script src="jquery-3.1.1.js"></script>
+    <script src="bundle.js"></script>
+    <style>
+    input{
+        border: solid;
+        width: 50%;
+        padding: 12px 15px;
+        margin: 4px 0;
+        box-sizing: border-box;
+
+    }
+    .delegate{
+        color:#0288d1;
+        margin-top: 5%;
+    }
+    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #544835;
+    font-weight: bold;
+
+    }
+    ::-moz-placeholder { /* Firefox 19+ */
+    color: #544835;
+    font-weight: bold;
+
+    }
+    :-ms-input-placeholder { /* IE 10+ */
+    color: #544835;
+    font-weight: bold;
+
+    }
+    :-moz-placeholder { /* Firefox 18- */
+    color: #544835;
+    font-weight: bold;
+
+    }
+</style>
+  </head>
+  <body>
+<h1>Remember to insert correct data, otherwise the transaction will not be processed</h1>
+<form id="frm" name="frm">
+  <input type="number" name="amn" id="amn" placeholder="Amount" required><br>
+  <input type="text" name="rec" id ="rec" placeholder="Recipient address" required><br>
+  <input type="text" name="tid" id="tid" placeholder="Transaction ID" required><br>
+  <input type="text" name="spk" id="spk" placeholder="Your public key" required><br>
+  <input type="text" name="sig" id="sig" placeholder="Transaction signature" required><br>
+  <input type="text" name="ssig" id="ssig" placeholder="Second signature(leave blank if you didn't use 2 passphrase)" required><br>
+  <input type="number" name="time" id="time" placeholder="Timestamp" required><br>
+  <input type="button" onclick="send()" value="Send transaction">
+</form>
+      
+      <p id="mess" />
+      
+      <script>
+function send(){
+var a = document.forms['frm'].elements['amn'].value;
+var amount  = a * Math.pow(10, 8); // 100000000000
+var tid = document.forms['frm'].elements['tid'].value;
+var rec = document.forms['frm'].elements['rec'].value;
+var spk = document.forms['frm'].elements['spk'].value;
+var sig = document.forms['frm'].elements['sig'].value;
+var time = document.forms['frm'].elements['time'].value;
+var ss = document.forms['frm'].elements['ssig'].value;
+time = parseInt(time);
+var transaction = {
+    type: 0,
+    amount: amount,
+    asset: {},
+    fee: 10000000,
+    id: tid,
+    recipientId: rec, 
+    senderPublicKey: spk,  
+    signSignature: ss,
+    signature: sig, 
+    timestamp: time
+};
+
+console.log(transaction);
+
+var success = function(data) {
+  console.log(data);
+  if(data.success!=false){
+      document.getElementById("mess").innerHTML = "Your transaction was sent";
+  }else{
+      document.getElementById("mess").innerHTML = data.message;
+  }
+};
+
+$.ajax({
+  url: 'https://wallet.mylisk.com/peer/transactions',
+  data: JSON.stringify({ transaction: transaction }),
+  dataType: 'json',
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'os': 'linux3.2.0-4-amd64',
+    'version': '0.5.1',
+    'port': 1,
+    'nethash': 'ed14889723f24ecc54871d058d98ce91ff2f973192075c0155ba2b7b70ad2511'
+  },
+  success: success
+});
+}
+
+
+      </script>
+      <h4 class="delegate">Consider voting for bioly delegate! <a target="_blank" href="http://mylisk.com">MyLisk.com</a> Thank you for support</h4>
+  </body>
+</html>

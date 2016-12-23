@@ -1,0 +1,80 @@
+<head>
+<meta charset="utf-8"> 
+<title>Offline version of Lisk transaction generator</title>
+<style>
+    input{
+        border: solid;
+        width: 50%;
+        padding: 12px 15px;
+        margin: 4px 0;
+        box-sizing: border-box;
+
+    }
+    .delegate{
+        color:#0288d1;
+        margin-top: 5%;
+    }
+    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #544835;
+    font-weight: bold;
+
+    }
+    ::-moz-placeholder { /* Firefox 19+ */
+    color: #544835;
+    font-weight: bold;
+
+    }
+    :-ms-input-placeholder { /* IE 10+ */
+    color: #544835;
+    font-weight: bold;
+
+    }
+    :-moz-placeholder { /* Firefox 18- */
+    color: #544835;
+    font-weight: bold;
+
+    }
+</style>
+<script src="jquery-3.1.1.js"></script>
+<script src="bundle.js"></script>
+</head>
+<body>
+    
+<h1>Instruction</h1>
+<h2>1. Insert correct passphrase's, else the transaction will be signed for ANOTHER account</h2>
+<h2>2. For every transaction fee is 0.1 LSK. The fee will be taken from account balance, NOT FROM AMOUNT which you insert!</br> Please remember about it when you plan to send specific amount</h2>
+<h2>3. This tool is only for SIGNING transaction. You are not able to send any LSK.</h2>
+<h2>4. Please carefully copy all the results</h2>
+<form id="frm" name="frm">
+  <input type="text" name="pass1" id="pass1" placeholder="Your passphrase" required><br>
+  <input type="text" name="pass2" id="pass2" placeholder="Your second passphrase (leave blank if you haven't)"><br>
+  <input type="number" name="amount" id ="amount" placeholder="Amount" required><br>
+  <input type="text" name="rec" id="rec" placeholder="Recipient address" required><br>
+  <input type="button" onclick="get()" value="Generate transaction">
+</form>
+<p><strong>Your transaction id: </strong><span id="transactionid" /></p>
+<p><strong>Your public key: </strong><span id="senderpublickey" /></p>
+<p><strong>Second signatur: </strong><span id="ssignature" /></p>
+<p><strong>Transaction signatur: </strong><span id="signature" /></p>
+<p><strong>Timestamp: </strong><span id="timestamp" /></p>
+<script>
+function get(){
+var pass = document.forms['frm'].elements['pass1'].value;
+var second = document.forms['frm'].elements['pass2'].value;
+var uam = document.forms['frm'].elements['amount'].value;
+var receiver = document.forms['frm'].elements['rec'].value;
+var keys = lisk.crypto.getKeys(pass);
+var amount  = uam * Math.pow(10, 8); // 100000000000
+var transaction = lisk.transaction.createTransaction(receiver, amount, pass, second);
+console.log(transaction);
+
+document.getElementById("transactionid").innerHTML = transaction.id;
+document.getElementById("senderpublickey").innerHTML = transaction.senderPublicKey;
+document.getElementById("signature").innerHTML = transaction.signature;
+document.getElementById("ssignature").innerHTML = transaction.signSignature;
+document.getElementById("timestamp").innerHTML = transaction.timestamp;
+}
+</script>
+
+      <h4 class="delegate">Consider voting for bioly delegate! <a target="_blank" href="http://mylisk.com">MyLisk.com</a> Thank you for support</h4>
+</body>
