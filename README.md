@@ -7,9 +7,11 @@ https://jquery.com
 
 # Installtion
 Download the offline.zip for your offline machine and online.zip for online machine
+
 Instead online.html you can also use my page http://tools.mylisk.com/online.html
 # OR
 Download offline.html and [jquery](https://jquery.com)
+
 Install lisk-js module
 ```
 npm install lisk-js
@@ -29,4 +31,5 @@ The same procedure as above is for online.html
 
 ## Author
 bioly, terazbitcoin@gmail.com
+
 Please consider voting me as a Lisk delegate, this will help me improve the tool and work more for Lisk community 
