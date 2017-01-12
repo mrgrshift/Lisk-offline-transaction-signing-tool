@@ -51,10 +51,41 @@
   <input type="number" name="time" id="time" placeholder="Timestamp" required><br>
   <input type="button" onclick="send()" value="Send transaction">
 </form>
-      
-      <p id="mess" />
-      
-      <script>
+<p id="mess" />
+<h3>Or import the file with signed data:</h3>
+<input type="file" id="file-input" />
+<script>
+function readSingleFile(e) {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var contents = e.target.result;
+    displayContents(contents);
+  };
+  reader.readAsText(file);
+}
+
+function displayContents(contents) {
+  var jsonf = JSON.parse(contents);
+  var amoun = jsonf.sendamount;
+  amoun = amoun / Math.pow(10, 8);
+  document.getElementById("amn").value = amoun;
+  document.getElementById("rec").value = jsonf.recipient;
+  document.getElementById("tid").value = jsonf.transid;
+  document.getElementById("spk").value = jsonf.publicKey;
+  document.getElementById("sig").value = jsonf.signatur;
+  if(jsonf.ssignatur){
+  document.getElementById("ssig").value = jsonf.ssignatur;
+  }
+  document.getElementById("time").value = jsonf.timestamp;
+}
+
+document.getElementById('file-input')
+  .addEventListener('change', readSingleFile, false);
+
 function send(){
 var a = document.forms['frm'].elements['amn'].value;
 var amount  = a * Math.pow(10, 8); // 100000000000
@@ -97,14 +128,13 @@ $.ajax({
   headers: {
     'Content-Type': 'application/json',
     'os': 'linux3.2.0-4-amd64',
-    'version': '0.5.1',
+    'version': '0.5.2',
     'port': 1,
     'nethash': 'ed14889723f24ecc54871d058d98ce91ff2f973192075c0155ba2b7b70ad2511'
   },
   success: success
 });
 }
-
 
       </script>
       <h4 class="delegate">Consider voting for bioly delegate! <a target="_blank" href="http://mylisk.com">MyLisk.com</a> Thank you for support</h4>
