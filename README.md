@@ -7,7 +7,7 @@ https://jquery.com
 https://github.com/eligrey/FileSaver.js/
 
 # Installtion
-Download the offline.zip for your offline machine and online.zip for online machine - https://github.com/biolypl/Lisk-offline-transaction-signing-tool/releases/tag/v1.0
+Download the latest releases offline.zip for your offline machine and online.zip for online machine - https://github.com/biolypl/Lisk-offline-transaction-signing-tool/releases
 
 Instead online.html you can also use my page http://tools.mylisk.com/online.html
 # OR
