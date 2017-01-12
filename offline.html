@@ -1,3 +1,4 @@
+ 
 <head>
 <meta charset="utf-8"> 
 <title>Offline version of Lisk transaction generator</title>
@@ -37,6 +38,7 @@
 </style>
 <script src="jquery-3.1.1.js"></script>
 <script src="bundle.js"></script>
+<script src="FileSaver.js"></script>
 </head>
 <body>
     
@@ -44,7 +46,7 @@
 <h2>1. Insert correct passphrase's, else the transaction will be signed for ANOTHER account</h2>
 <h2>2. For every transaction fee is 0.1 LSK. The fee will be taken from account balance, NOT FROM AMOUNT which you insert!</br> Please remember about it when you plan to send specific amount</h2>
 <h2>3. This tool is only for SIGNING transaction. You are not able to send any LSK.</h2>
-<h2>4. Please carefully copy all the results</h2>
+<h2>4. Please carefully copy all the results or download the ready to import file.</h2>
 <form id="frm" name="frm">
   <input type="text" name="pass1" id="pass1" placeholder="Your passphrase" required><br>
   <input type="text" name="pass2" id="pass2" placeholder="Your second passphrase (leave blank if you haven't)"><br>
@@ -54,26 +56,38 @@
 </form>
 <p><strong>Your transaction id: </strong><span id="transactionid" /></p>
 <p><strong>Your public key: </strong><span id="senderpublickey" /></p>
-<p><strong>Second signatur: </strong><span id="ssignature" /></p>
 <p><strong>Transaction signatur: </strong><span id="signature" /></p>
+<p><strong>Second signatur: </strong><span id="ssignature" /></p>
 <p><strong>Timestamp: </strong><span id="timestamp" /></p>
+<button onclick="download()">Download file with signed transaction data</button>
 <script>
+var receiver, amount, transid, transkey, transsign, trans2sign, transtime;
 function get(){
 var pass = document.forms['frm'].elements['pass1'].value;
 var second = document.forms['frm'].elements['pass2'].value;
 var uam = document.forms['frm'].elements['amount'].value;
-var receiver = document.forms['frm'].elements['rec'].value;
-var keys = lisk.crypto.getKeys(pass);
-var amount  = uam * Math.pow(10, 8); // 100000000000
+receiver = document.forms['frm'].elements['rec'].value;
+amount  = uam * Math.pow(10, 8); // 100000000000
 var transaction = lisk.transaction.createTransaction(receiver, amount, pass, second);
-console.log(transaction);
-
+transid = transaction.id;
+transkey = transaction.senderPublicKey;
+transsign = transaction.signature;
+trans2sign = transaction.signSignature;
+transtime = transaction.timestamp;
 document.getElementById("transactionid").innerHTML = transaction.id;
 document.getElementById("senderpublickey").innerHTML = transaction.senderPublicKey;
 document.getElementById("signature").innerHTML = transaction.signature;
-document.getElementById("ssignature").innerHTML = transaction.signSignature;
+if(transaction.signSignature){
+document.getElementById("ssignature").innerHTML = transaction.signSignature;}
 document.getElementById("timestamp").innerHTML = transaction.timestamp;
 }
+function download(){
+var printdata = {sendamount:amount, recipient:receiver, transid:transid, publicKey:transkey, signatur: transsign, ssignatur: trans2sign, timestamp: transtime};
+var json = JSON.stringify(printdata);
+var blob = new Blob([json], {type: "application/json"});
+saveAs(blob, "transaction.json");
+}
+
 </script>
 
       <h4 class="delegate">Consider voting for bioly delegate! <a target="_blank" href="http://mylisk.com">MyLisk.com</a> Thank you for support</h4>
