@@ -67,7 +67,13 @@ var pass = document.forms['frm'].elements['pass1'].value;
 var second = document.forms['frm'].elements['pass2'].value;
 var uam = document.forms['frm'].elements['amount'].value;
 receiver = document.forms['frm'].elements['rec'].value;
+uam = Number(uam);
+uam = uam.toFixed(8);
 amount  = uam * Math.pow(10, 8); // 100000000000
+if(amount.toString().indexOf('.')!==-1){
+    amount = amount.toPrecision(amount.toString().indexOf('.'));
+}
+amount = Number(amount);
 var transaction = lisk.transaction.createTransaction(receiver, amount, pass, second);
 transid = transaction.id;
 transkey = transaction.senderPublicKey;
