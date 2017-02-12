@@ -88,7 +88,13 @@ document.getElementById('file-input')
 
 function send(){
 var a = document.forms['frm'].elements['amn'].value;
+a = Number(a);
+a = a.toFixed(8);
 var amount  = a * Math.pow(10, 8); // 100000000000
+if(amount.toString().indexOf('.')!==-1){
+    amount = amount.toPrecision(amount.toString().indexOf('.'));
+}
+amount = Number(amount);
 var tid = document.forms['frm'].elements['tid'].value;
 var rec = document.forms['frm'].elements['rec'].value;
 var spk = document.forms['frm'].elements['spk'].value;
