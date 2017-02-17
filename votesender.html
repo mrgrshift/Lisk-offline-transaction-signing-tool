@@ -1,0 +1,106 @@
+<head>
+<meta charset="utf-8"> 
+<title>Lisk votes tool</title>
+<link href="bootstrap.min.css" rel="stylesheet">
+
+<script src="jquery-3.1.1.js"></script>
+<script src="bundle.js"></script>
+<script src="FileSaver.js"></script>
+</head>
+<body>
+   <div class="col-sm-12">
+<form id="frm" name="frm" class="form">
+   
+    <div class="checkbox"><label class="checkbox"><input type="checkbox" value="vote" id="vote">Add vote/s</label></div><br>
+    <div class="checkbox"><label class="checkbox"><input type="checkbox" value="unvote" id="unvote">Remove vote/s</label></div><br>
+    <input type="text" name="pass1" id ="pass1" placeholder="Passphrase" class="form-control" required><br>
+    <input type="text" name="pass2" id ="pass2" placeholder="Second passphrase"  class="form-control" required><br>
+   <input type="file"  class="btn btn-default" id="file-input" />
+  <input type="button" class="btn btn-primary" onclick="get()" value="Send vote/s">
+         
+   
+</form>
+       <span id="result"></span>
+   </div>
+<script>
+    
+    var jsonf;
+    var a=2;
+    var publickeystab;
+    var ifvote, ifunvote;
+ function readSingleFile(e) {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var contents = e.target.result;
+    displayContents(contents);
+  };
+  reader.readAsText(file);
+}
+
+function displayContents(contents) {
+  jsonf = JSON.parse(contents);
+  
+}
+
+document.getElementById('file-input')
+  .addEventListener('change', readSingleFile, false);
+  
+  
+function  get(){
+    var pass = document.forms['frm'].elements['pass1'].value;
+    var second = document.forms['frm'].elements['pass2'].value;
+      var znak;
+      ifvote = document.getElementById("vote").checked;
+      ifunvote = document.getElementById("unvote").checked;
+      if(ifvote === false && ifunvote === false || ifvote === true && ifunvote === true){
+            alert("You have to chose one of the transaction type!");
+            return false;
+        }
+        if(ifvote===true){
+            znak = "+";
+        }
+        if(ifunvote===true){
+            znak = "-";
+        }
+        var total = jsonf.totalvotes;
+        var votetab = new Array();
+        for(var t=0; t<total; t++){
+            var tmpkey1 = jsonf.keys[t];
+            var tmpstring = znak+tmpkey1;
+            votetab[t] = tmpstring;
+        }
+
+    var transaction = lisk.vote.createVote(pass,votetab,second);
+
+    
+var success = function(data) {
+        console.log(data);
+        if(data.success){
+        document.getElementById("result").innerHTML = "Transaction sent, id: "+data.transactionId;
+    }else{
+       document.getElementById("result").innerHTML = "Error"; 
+    }
+};
+
+$.ajax({
+  url: 'https://wallet.mylisk.com/peer/transactions',
+  data: JSON.stringify({ transaction: transaction }),
+  dataType: 'json',
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'os': 'linux3.2.0-4-amd64',
+    'version': '0.5.2',
+    'port': 1,
+    'nethash':'ed14889723f24ecc54871d058d98ce91ff2f973192075c0155ba2b7b70ad2511'
+  },
+  success: success
+});
+
+}
+</script>
+</body>
